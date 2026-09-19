@@ -1,10 +1,12 @@
 :root {
   --principal: #124238;
   --principal-2: #0d2e27;
+  --principal-3: #071a16;
   --secundario: #254212;
   --sombra: #0d3029;
   --sombra-hover: #154d41;
   --destaque: #ffae00;
+  --bg-destaque: #c98900;
   --destaque-hover: #ffd37c;
   --texto-1: #ffffff;
   --texto-2: #a7c3b7;
@@ -177,13 +179,42 @@ body {
 }
 
 
-.herotoproj {
-  background: linear-gradient(var(--principal), var(--principal-2));
-  height: 30px;
-  z-index: 1000;
+.hero-3011 {
+  background-color: var(--bg-destaque);
+  padding: top 32px;
 }
 
+.container-3011 {
+  display: flex;
 
+}
+
+.art-3011 {
+  width: 1000px;  /* Largura desejada para o formato horizontal */
+  height: 300px; /* Altura menor que a largura */
+  overflow: hidden;
+}
+
+.hero-3011 img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: 50px;
+}
+
+.text-3011 {
+  padding-left: 50px;
+}
+
+.text-3011 p {
+  font-size: large;
+}
+
+.text-3011 svg {
+  width: 30px;
+  height: 30px;
+}
 
 /* projetos */
 
@@ -223,7 +254,7 @@ body {
   overflow: hidden;
   text-decoration: none;
   color: inherit;
-  background: #fff;
+  background: var(--principal-3);
 }
 
 .proj-card__imagem {
@@ -239,6 +270,7 @@ body {
 }
 
 .proj-card__titulo {
+  color: var(--destaque);
   margin: 0 0 8px;
   font-size: 17px;
   font-weight: 600;
@@ -246,8 +278,8 @@ body {
 
 .proj-card__descricao {
   margin: 0;
-  font-size: 14px;
-  color: #5b5a55;
+  font-size: 18px;
+  color: var(--texto-1);
   line-height: 1.5;
 }
 
