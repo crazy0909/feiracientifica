@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Administração de projetos</title>
+  <link rel="stylesheet" href="css/admin.css">
+</head>
+
+<body>
+
+  <header>
+    <h1>Administração de projetos</h1>
+    <div class="conta" id="conta-info" style="display:none;">
+      <span id="email-usuario"></span>
+      <button class="btn-link" id="btn-sair">Sair</button>
+    </div>
+  </header>
+
+  <!-- ---------- TELA DE LOGIN ---------- -->
+  <div id="login-view">
+    <h2>Entrar</h2>
+    <form id="form-login">
+      <label for="login-email">E-mail</label>
+      <input type="email" id="login-email" required autocomplete="username" />
+
+      <label for="login-senha">Senha</label>
+      <input type="password" id="login-senha" required autocomplete="current-password" />
+
+      <button type="submit" class="btn-primary">Entrar</button>
+      <p class="erro" id="erro-login">E-mail ou senha incorretos.</p>
+    </form>
+  </div>
+
+  <!-- ---------- PAINEL (visível após login) ---------- -->
+  <main id="painel-view">
+
+    <section class="cartao-formulario">
+      <h2 id="titulo-formulario">Adicionar projeto</h2>
+      <p class="sub">Preencha os dados do projeto para que ele apareça no site.</p>
+
+      <form id="form-projeto">
+        <input type="hidden" id="projeto-id" />
+
+        <label for="projeto-titulo">Título</label>
+        <input type="text" id="projeto-titulo" required maxlength="80" />
+
+        <label for="projeto-descricao">Descrição</label>
+        <textarea id="projeto-descricao" required maxlength="400"></textarea>
+
+        <label for="projeto-imagem">URL da imagem</label>
+        <input type="url" id="projeto-imagem" required placeholder="https://..." />
+
+        <label for="projeto-link">Link do projeto (opcional)</label>
+        <input type="url" id="projeto-link" placeholder="https://..." />
+
+        <div class="linha-form">
+          <button type="submit" class="btn-primary" id="btn-salvar">Salvar projeto</button>
+          <button type="button" class="btn-link cancelar-edicao" id="btn-cancelar-edicao">Cancelar edição</button>
+        </div>
+        <p class="erro" id="erro-form"></p>
+      </form>
+    </section>
+
+    <section class="lista-projetos">
+      <h2>Projetos publicados</h2>
+      <p class="sub">Clique em editar para alterar um card, ou em remover para excluí-lo.</p>
+      <div id="lista-container">
+        <p class="vazio">Carregando projetos…</p>
+      </div>
+    </section>
+
+  </main>
+
+  <script type="module">
+    import { auth, db } from "./js/firebase-init.js";
+    import {
+      onAuthStateChanged,
+      signInWithEmailAndPassword,
+      signOut,
+    } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
+    import {
+      collection,
+      addDoc,
+      updateDoc,
+      deleteDoc,
+      doc,
+      onSnapshot,
+      query,
+      orderBy,
+      serverTimestamp,
+    } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
+
+    // ---------- Elementos ----------
+    const loginView = document.getElementById("login-view");
+    const painelView = document.getElementById("painel-view");
+    const contaInfo = document.getElementById("conta-info");
+    const emailUsuario = document.getElementById("email-usuario");
+
+    const formLogin = document.getElementById("form-login");
+    const erroLogin = document.getElementById("erro-login");
+    const btnSair = document.getElementById("btn-sair");
+
+    const formProjeto = document.getElementById("form-projeto");
+    const projetoId = document.getElementById("projeto-id");
+    const projetoTitulo = document.getElementById("projeto-titulo");
+    const projetoDescricao = document.getElementById("projeto-descricao");
+    const projetoImagem = document.getElementById("projeto-imagem");
+    const projetoLink = document.getElementById("projeto-link");
+    const tituloFormulario = document.getElementById("titulo-formulario");
+    const btnSalvar = document.getElementById("btn-salvar");
+    const btnCancelarEdicao = document.getElementById("btn-cancelar-edicao");
+    const erroForm = document.getElementById("erro-form");
+    const listaContainer = document.getElementById("lista-container");
+
+    // ---------- Autenticação ----------
+    formLogin.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      erroLogin.style.display = "none";
+      try {
+        await signInWithEmailAndPassword(
+          auth,
+          document.getElementById("login-email").value.trim(),
+          document.getElementById("login-senha").value
+        );
+      } catch (err) {
+        erroLogin.style.display = "block";
+      }
+    });
+
+    btnSair.addEventListener("click", () => signOut(auth));
+
+    onAuthStateChanged(auth, (usuario) => {
+      if (usuario) {
+        loginView.style.display = "none";
+        painelView.style.display = "block";
+        contaInfo.style.display = "flex";
+        emailUsuario.textContent = usuario.email;
+        escutarProjetos();
+      } else {
+        loginView.style.display = "block";
+        painelView.style.display = "none";
+        contaInfo.style.display = "none";
+      }
+    });
+
+    // ---------- Salvar (criar ou editar) ----------
+    formProjeto.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      erroForm.textContent = "";
+      btnSalvar.disabled = true;
+      btnSalvar.textContent = "Salvando…";
+
+      const dados = {
+        titulo: projetoTitulo.value.trim(),
+        descricao: projetoDescricao.value.trim(),
+        imagemUrl: projetoImagem.value.trim(),
+        linkUrl: projetoLink.value.trim() || null,
+      };
+
+      try {
+        if (projetoId.value) {
+          await updateDoc(doc(db, "projetos", projetoId.value), dados);
+        } else {
+          await addDoc(collection(db, "projetos"), {
+            ...dados,
+            criadoEm: serverTimestamp(),
+          });
+        }
+        limparFormulario();
+      } catch (err) {
+        erroForm.textContent = "Não foi possível salvar. Tente novamente.";
+      } finally {
+        btnSalvar.disabled = false;
+        btnSalvar.textContent = "Salvar projeto";
+      }
+    });
+
+    btnCancelarEdicao.addEventListener("click", limparFormulario);
+
+    function limparFormulario() {
+      formProjeto.reset();
+      projetoId.value = "";
+      tituloFormulario.textContent = "Adicionar projeto";
+      btnCancelarEdicao.style.display = "none";
+    }
+
+    function editarProjeto(p) {
+      projetoId.value = p.id;
+      projetoTitulo.value = p.titulo;
+      projetoDescricao.value = p.descricao;
+      projetoImagem.value = p.imagemUrl;
+      projetoLink.value = p.linkUrl || "";
+      tituloFormulario.textContent = "Editar projeto";
+      btnCancelarEdicao.style.display = "inline";
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    async function apagarProjeto(id) {
+      if (!confirm("Remover este projeto? Essa ação não pode ser desfeita.")) return;
+      await deleteDoc(doc(db, "projetos", id));
+    }
+
+    // ---------- Lista em tempo real ----------
+    function escutarProjetos() {
+      const q = query(collection(db, "projetos"), orderBy("criadoEm", "desc"));
+      onSnapshot(q, (snapshot) => {
+        if (snapshot.empty) {
+          listaContainer.innerHTML = '<p class="vazio">Nenhum projeto cadastrado ainda.</p>';
+          return;
+        }
+
+        const projetos = snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
+        listaContainer.innerHTML = "";
+
+        projetos.forEach((p) => {
+          const item = document.createElement("div");
+          item.className = "item-projeto";
+          item.innerHTML = `
+          <img src="${escapeHtml(p.imagemUrl)}" alt="" />
+          <div class="info">
+            <h3>${escapeHtml(p.titulo)}</h3>
+            <p>${escapeHtml(p.descricao)}</p>
+            <div class="acoes">
+              <button type="button" class="editar">Editar</button>
+              <button type="button" class="apagar">Remover</button>
+            </div>
+          </div>
+        `;
+          item.querySelector(".editar").addEventListener("click", () => editarProjeto(p));
+          item.querySelector(".apagar").addEventListener("click", () => apagarProjeto(p.id));
+          listaContainer.appendChild(item);
+        });
+      });
+    }
+
+    function escapeHtml(str) {
+      const div = document.createElement("div");
+      div.textContent = str ?? "";
+      return div.innerHTML;
+    }
+  </script>
+
+</body>
+
+</html>

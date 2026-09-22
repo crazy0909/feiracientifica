@@ -1,0 +1,18 @@
+// firestore.rules
+// Cole isto em: Firebase Console > Firestore Database > Regras
+//
+// - Qualquer visitante pode LER os projetos (para os cards aparecerem no site).
+// - Só um usuário autenticado (o admin) pode CRIAR, EDITAR ou APAGAR projetos.
+
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    match /projetos/{projetoId} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+
+  }
+}
