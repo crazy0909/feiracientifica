@@ -1,6 +1,6 @@
 :root {
-  --principal: #124238;
-  --principal-2: #0d2e27;
+  --principal-2: #124238;
+  --principal: #0d2e27;
   --principal-3: #071a16;
   --secundario: #254212;
   --sombra: #0d3029;
@@ -11,6 +11,19 @@
   --texto-1: #ffffff;
   --texto-2: #a7c3b7;
   --com-hover: #a7c3b75b;
+  --linha: #a7c3b74d;
+  /* estava sem definição */
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+img,
+svg {
+  max-width: 100%;
 }
 
 body {
@@ -51,6 +64,7 @@ body {
 .marca svg {
   height: 40px;
   width: 40px;
+  flex-shrink: 0;
 }
 
 .marca small {
@@ -90,9 +104,11 @@ body {
   color: var(--texto-1);
 }
 
+/* hero */
+
 .hero {
   position: relative;
-  background: radial-gradient(55% 75% at 78% 42%, rgba(242, 182, 50, .18), transparent 62%), linear-gradient(180deg, var(--sombra) 0%, var(--principal) 100%);
+  background: var(--principal);
   overflow: hidden;
 }
 
@@ -101,9 +117,8 @@ body {
   position: relative;
   z-index: 2;
   padding: clamp(2.5rem, 7vw, 5rem) 20px 0;
-  align-items: flex-start;
+  align-items: center;
 }
-
 
 .hero span {
   display: inline-block;
@@ -134,16 +149,34 @@ body {
   font-size: 19px;
 }
 
+.hero-art {
+  min-width: 500px;
+  width: 1500px;
+  height: 300px;
+  overflow: hidden;
+  flex: 1;
+}
+
+.hero-art img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: 50px;
+}
+
 .interacao {
   margin-bottom: 30px;
 }
 
 .btn {
+  display: inline-block;
   font-size: 18px;
   text-decoration: none;
   padding: 12px 20px;
   border-radius: 999px;
   margin-right: 10px;
+  margin-bottom: 10px;
   transition: ease-in-out 0.2s;
 }
 
@@ -178,18 +211,20 @@ body {
   background-color: var(--destaque-hover);
 }
 
-.crono{
+/* crono */
+
+.crono {
   padding-top: 50px;
   padding-bottom: 50px;
   background-color: var(--principal);
 }
 
-.i-crono{
+.i-crono {
   display: flex;
   border-top: solid var(--texto-2) 1px;
 }
 
-.crono-content{
+.crono-content {
   color: var(--texto-1);
   display: flex;
   gap: 10px;
@@ -198,43 +233,51 @@ body {
   padding-left: 20px;
 }
 
-.crono-content p{
+.crono-content p {
   display: flex;
   flex-direction: column;
 }
 
-.crono-content small{
+.crono-content small {
   color: var(--texto-2);
 }
 
-.crono-content:last-child{
+.crono-content:last-child {
   border-right: none;
 }
 
-.crono svg{
+.crono svg {
   width: 30px;
   height: auto;
+  flex-shrink: 0;
 }
 
+/* 3011 */
 
 .hero-3011 {
-  background-color: var(--bg-destaque);
-  padding: top 32px;
+  background-color: var(--principal-2);
+  padding-top: 60px;
+  padding-bottom: 60px;
+  box-shadow: inset 0  30px 20px -7px rgba(7, 26, 22, 0.7), 
+              inset 0 -30px 20px -7px rgba(7, 26, 22, 0.7);
 }
 
-.hero-3011 .interno{
+.hero-3011 .interno {
   width: 100%;
 }
 
 .container-3011 {
+  gap: 100px;
   display: flex;
   justify-content: space-between;
   margin: 0;
+  width: 100%;
 }
 
 .art-3011 {
-  width: 500px;  /* Largura desejada para o formato horizontal */
-  height: 300px; /* Altura menor que a largura */
+  min-width: 500px;
+  width: 500px;
+  height: 300px;
   overflow: hidden;
   flex: 1;
 }
@@ -248,12 +291,33 @@ body {
 }
 
 .text-3011 {
+  display: flex;
+  flex-direction: column;
   width: 500px;
+  max-width: 500px;
   padding-left: 50px;
+  align-items: center;
+}
+
+.hero-3011 h1{
+  color: var(--destaque);
 }
 
 .text-3011 p {
+  color: var(--texto-2);
   font-size: large;
+}
+
+.btn-3011 {
+  border: solid 2px;
+  color: var(--texto-2);
+  text-decoration: none;
+  background-color: var(--principal-2);
+}
+
+.btn-3011:hover {
+  color: var(--texto-1);
+  background-color: var(--principal);
 }
 
 .text-3011 svg {
@@ -264,7 +328,7 @@ body {
 /* projetos */
 
 .projetos {
-  background-color: var(--principal-2);
+  background-color: var(--principal);
   padding: 48px 24px;
 }
 
@@ -281,7 +345,7 @@ body {
   scroll-snap-type: x mandatory;
   scroll-behavior: smooth;
   padding-bottom: 4px;
-  /* esconde a barra de rolagem nativa, a navegação é pelas setas */
+  -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
 }
 
@@ -291,7 +355,6 @@ body {
 
 .proj-card {
   flex: 0 0 calc((100% - 24px * 2) / 3);
-  /* 3 cards visíveis */
   scroll-snap-align: start;
   display: block;
   border: 1px solid #e2e0d8;
@@ -368,26 +431,167 @@ body {
   right: -20px;
 }
 
-/* Em telas menores, 3 colunas não cabem: reduz para 1 card visível */
+/* =========================================================
+   RESPONSIVO
+   ========================================================= */
+
+/* Tablet */
 @media (max-width: 900px) {
   .proj-card {
     flex: 0 0 calc((100% - 24px) / 2);
+    /* 2 visíveis */
   }
 
-  /* 2 visíveis */
-}
-
-@media (max-width: 600px) {
-  .proj-card {
-    flex: 0 0 85%;
+  .interno {
+    gap: 16px;
   }
 
-  /* 1 visível */
+  /* Bloco 3011: empilha imagem e texto */
+  .container-3011 {
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .art-3011 {
+    min-width: 0;
+    width: 100%;
+    flex: none;
+  }
+
+  .text-3011 {
+    width: 100%;
+    max-width: 100%;
+    padding-left: 0;
+    padding-bottom: 24px;
+  }
+
+  /* Setas ficam dentro do carrossel para não estourar a tela */
   .projetos-seta--anterior {
     left: 4px;
   }
 
   .projetos-seta--proxima {
     right: 4px;
+  }
+}
+
+/* Celular */
+@media (max-width: 600px) {
+
+  /* Cabeçalho: marca em cima, menu rolável embaixo */
+  .marca small {
+    display: none;
+  }
+
+  #header .interno {
+    flex-wrap: wrap;
+    padding: 10px 16px;
+  }
+
+  .navigation {
+    width: 100%;
+    margin-left: 0;
+    overflow-x: auto;
+    white-space: nowrap;
+    scrollbar-width: none;
+    padding-bottom: 4px;
+  }
+
+  .navigation::-webkit-scrollbar {
+    display: none;
+  }
+
+  .navigation a {
+    margin-left: 0;
+    margin-right: 6px;
+    padding: 8px 14px;
+    font-size: 15px;
+    flex-shrink: 0;
+  }
+
+  /* Hero */
+  .hero .interno {
+    flex-direction: column;
+    padding: 2rem 16px 0;
+  }
+
+  .hero span {
+    font-size: 14px;
+    padding: 6px 14px;
+  }
+
+  .hero h1 {
+    max-width: 100%;
+    font-size: clamp(2.1rem, 11vw, 3rem);
+  }
+
+  .hero p {
+    max-width: 100%;
+    font-size: 17px;
+    margin-bottom: 24px;
+  }
+
+  .btn {
+    font-size: 16px;
+    padding: 12px 18px;
+    text-align: center;
+  }
+
+  /* Linha do tempo: vira coluna */
+  .crono {
+    padding: 32px 16px;
+  }
+
+  .i-crono {
+    flex-direction: column;
+  }
+
+  .crono-content {
+    border-right: none;
+    border-bottom: solid var(--texto-2) 1px;
+    padding: 16px 0;
+  }
+
+  .crono-content:last-child {
+    border-bottom: none;
+  }
+
+  /* Bloco 3011 */
+  .hero-3011 {
+    padding-top: 24px;
+  }
+
+  .art-3011 {
+    height: 220px;
+  }
+
+  .hero-3011 img {
+    border-radius: 28px;
+  }
+
+  /* Carrossel: 1 card visível, com pedaço do próximo aparecendo */
+  .projetos {
+    padding: 32px 16px;
+  }
+
+  .projetos-track {
+    gap: 16px;
+  }
+
+  .proj-card {
+    flex: 0 0 85%;
+  }
+
+  .proj-card__imagem {
+    height: 150px;
+  }
+
+  .proj-card__descricao {
+    font-size: 16px;
+  }
+
+  .projetos-seta {
+    width: 36px;
+    height: 36px;
   }
 }
