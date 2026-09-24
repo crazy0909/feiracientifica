@@ -1,0 +1,142 @@
+:root {
+  --principal-2: #124238;
+  --principal: #0d2e27;
+  --principal-3: #071a16;
+  --secundario: #254212;
+  --sombra: #0d3029;
+  --sombra-hover: #154d41;
+  --destaque: #ffae00;
+  --bg-destaque: #c98900;
+  --destaque-hover: #ffd37c;
+  --texto-1: #ffffff;
+  --texto-2: #a7c3b7;
+  --com-hover: #a7c3b75b;
+  --linha: #a7c3b74d;
+  /* estava sem definição */
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+img,
+svg {
+  max-width: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--texto-1);
+  -webkit-font-smoothing: antialiased;
+  background-color: var(--principal);
+}
+
+/* header */
+
+#header {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  background: var(--principal);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--linha);
+}
+
+.interno {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 12px 20px;
+  max-width: 1180px;
+  margin: 0 auto;
+}
+
+.marca {
+  display: flex;
+  align-items: center;
+  gap: .65rem;
+  font: 700 1.05rem / 1.1 var(--fonte-titulo);
+  text-decoration: none;
+  font-size: 16px;
+  color: var(--texto-1);
+}
+
+.marca svg {
+  height: 40px;
+  width: 40px;
+  flex-shrink: 0;
+}
+
+.marca small {
+  display: block;
+  margin-top: 2px;
+  font: 500 .78rem / 1.1 var(--fonte-texto);
+  color: var(--texto-2);
+}
+
+.navigation {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: auto;
+}
+
+.navigation a {
+  padding: 10px;
+  text-decoration: none;
+  color: var(--texto-2);
+  border-radius: 999px;
+  margin-left: 15px;
+  transition: ease-in-out 0.3s;
+}
+
+.navigation .active {
+  color: var(--texto-1);
+  background: var(--destaque);
+}
+
+.navigation .active:hover {
+  background: var(--destaque-hover);
+}
+
+.navigation a:hover {
+  background-color: var(--com-hover);
+  color: var(--texto-1);
+}
+
+@media (max-width: 600px) {
+
+  /* Cabeçalho: marca em cima, menu rolável embaixo */
+  .marca small {
+    display: none;
+  }
+
+  #header .interno {
+    flex-wrap: wrap;
+    padding: 10px 16px;
+  }
+
+  .navigation {
+    width: 100%;
+    margin-left: 0;
+    overflow-x: auto;
+    white-space: nowrap;
+    scrollbar-width: none;
+    padding-bottom: 4px;
+  }
+
+  .navigation::-webkit-scrollbar {
+    display: none;
+  }
+
+  .navigation a {
+    margin-left: 0;
+    margin-right: 6px;
+    padding: 8px 14px;
+    font-size: 15px;
+    flex-shrink: 0;
+  }
+}
