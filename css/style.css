@@ -619,6 +619,7 @@ body {
 
 .galeria {
   border-top: solid var(--bg-destaque) 1px;
+  border-bottom: solid var(--bg-destaque) 1px;
   background-color: var(--principal);
   padding: 48px 24px;
 }
@@ -688,4 +689,15 @@ body {
   grid-column: 1 / -1;
   text-align: center;
   padding: 24px 0;
+}
+
+footer{
+  display: flex;
+  background-color: #25312f;
+  color: var(--texto-2);
+}
+
+footer p{
+  margin-right: 5px;
+  align-self: flex-end;
 }
