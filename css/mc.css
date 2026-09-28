@@ -140,3 +140,79 @@ body {
     flex-shrink: 0;
   }
 }
+
+/* main */
+
+main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.titulo {
+  padding: 10px 20px;
+  text-align: left;
+  color: var(--texto-1);
+  border-bottom: solid var(--destaque) 1px;
+}
+
+.hero-mc {
+  display: flex;
+  /* justify-content: space-between; */
+  align-items: center;
+  border-bottom: solid var(--principal-2) 1px;
+}
+
+.text {
+  margin: 30px;
+  max-width: 50%;
+  border-radius: 10px;
+  background-color: var(--principal-3);
+  padding: 30px;
+  border-radius: 20px;
+}
+
+.text p {
+  font-size: 19px;
+  color: var(--texto-2);
+}
+
+.mc-art {
+  max-width: 50%;
+  margin: 30px;
+}
+
+.mc-art img {
+  width: 700px;
+  height: 400px;
+  object-fit: cover;
+}
+
+/* Projeto */
+
+.pjmc {
+  display: flex;
+  flex-direction: column;
+}
+
+.pjmc h1 {
+  color: var(--destaque);
+}
+
+.pj {
+  width: 100%;
+  padding: 30px;
+  background-color: var(--principal-2);
+  border-radius: 20px;
+  box-shadow: inset 0 30px 20px -7px rgba(41, 151, 127, 0.3),
+    inset 0 -30px 20px -7px rgba(41, 151, 127, 0.3);
+}
+
+.pj h1{
+  color: var(--texto-1);
+}
+
+.pj p{
+  color: var(--texto-2);
+  font-size: 19px;
+}

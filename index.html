@@ -60,7 +60,7 @@
       </nav>
     </div>
   </header>
-  
+
   <main>
     <section class="hero">
       <div class="interno">
@@ -96,7 +96,8 @@
               </g>
             </svg>
             <span>
-              <p><b>08/10/26</b>
+              <p>
+                <b>07/10/26</b>
                 <small>Data</small>
               </p>
             </span>
@@ -114,7 +115,9 @@
               </g>
             </svg>
             <span>
-              <p><b>14h ás 17h30</b>
+              <p>
+                <b>18h ás 21h</b>
+                <b>14h ás 17h30</b>
                 <small>Hóra</small>
               </p>
             </span>
@@ -183,9 +186,21 @@
         </button>
       </div>
     </section>
+
+    <section id="galeria" class="galeria">
+      <div class="galeria-grid" id="galeria-grid">
+        <p class="galeria-vazia">Carregando fotos…</p>
+      </div>
+    </section>
+
+    <dialog id="galeria-lightbox" class="galeria-lightbox">
+      <img alt="" />
+      <p></p>
+    </dialog>
   </main>
   <script type="module" src="js/firebase-init.js"></script>
   <script type="module" src="js/carrega-projetos.js"></script>
+  <script type="module" src="js/carrega-galeria.js"></script>
   <script src="js/carrossel-projetos.js"></script>
 </body>
 

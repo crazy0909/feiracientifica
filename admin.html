@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Administração de projetos</title>
+  <title>Painel de administração</title>
   <link rel="stylesheet" href="css/admin.css">
 </head>
 
@@ -36,40 +36,79 @@
   <!-- ---------- PAINEL (visível após login) ---------- -->
   <main id="painel-view">
 
-    <section class="cartao-formulario">
-      <h2 id="titulo-formulario">Adicionar projeto</h2>
-      <p class="sub">Preencha os dados do projeto para que ele apareça no site.</p>
+    <nav class="abas">
+      <button type="button" class="aba-btn ativa" data-aba="painel-projetos">Projetos</button>
+      <button type="button" class="aba-btn" data-aba="painel-galeria">Galeria de fotos</button>
+    </nav>
 
-      <form id="form-projeto">
-        <input type="hidden" id="projeto-id" />
+    <div id="painel-projetos" class="aba-painel">
 
-        <label for="projeto-titulo">Título</label>
-        <input type="text" id="projeto-titulo" required maxlength="100" />
+      <section class="cartao-formulario">
+        <h2 id="titulo-formulario">Adicionar projeto</h2>
+        <p class="sub">Preencha os dados do projeto para que ele apareça no site.</p>
 
-        <label for="projeto-descricao">Descrição</label>
-        <textarea id="projeto-descricao" required maxlength="400"></textarea>
+        <form id="form-projeto">
+          <input type="hidden" id="projeto-id" />
 
-        <label for="projeto-imagem">URL da imagem</label>
-        <input type="url" id="projeto-imagem" required placeholder="https://..." />
+          <label for="projeto-titulo">Título</label>
+          <input type="text" id="projeto-titulo" required maxlength="80" />
 
-        <label for="projeto-link">Link do projeto (opcional)</label>
-        <input type="url" id="projeto-link" placeholder="https://..." />
+          <label for="projeto-descricao">Descrição</label>
+          <textarea id="projeto-descricao" required maxlength="400"></textarea>
 
-        <div class="linha-form">
-          <button type="submit" class="btn-primary" id="btn-salvar">Salvar projeto</button>
-          <button type="button" class="btn-link cancelar-edicao" id="btn-cancelar-edicao">Cancelar edição</button>
+          <label for="projeto-imagem">URL da imagem</label>
+          <input type="url" id="projeto-imagem" required placeholder="https://..." />
+
+          <label for="projeto-link">Link do projeto (opcional)</label>
+          <input type="url" id="projeto-link" placeholder="https://..." />
+
+          <div class="linha-form">
+            <button type="submit" class="btn-primary" id="btn-salvar">Salvar projeto</button>
+            <button type="button" class="btn-link cancelar-edicao" id="btn-cancelar-edicao">Cancelar edição</button>
+          </div>
+          <p class="erro" id="erro-form"></p>
+        </form>
+      </section>
+
+      <section class="lista-projetos">
+        <h2>Projetos publicados</h2>
+        <p class="sub">Clique em editar para alterar um card, ou em remover para excluí-lo.</p>
+        <div id="lista-container">
+          <p class="vazio">Carregando projetos…</p>
         </div>
-        <p class="erro" id="erro-form"></p>
-      </form>
-    </section>
+      </section>
 
-    <section class="lista-projetos">
-      <h2>Projetos publicados</h2>
-      <p class="sub">Clique em editar para alterar um card, ou em remover para excluí-lo.</p>
-      <div id="lista-container">
-        <p class="vazio">Carregando projetos…</p>
-      </div>
-    </section>
+    </div>
+
+    <div id="painel-galeria" class="aba-painel" hidden>
+
+      <section class="cartao-formulario">
+        <h2>Adicionar foto</h2>
+        <p class="sub">Escolha uma imagem do seu computador. Ela será redimensionada e comprimida automaticamente.</p>
+
+        <form id="form-foto">
+          <label for="foto-arquivo">Arquivo de imagem</label>
+          <input type="file" id="foto-arquivo" accept="image/*" required />
+
+          <label for="foto-legenda">Legenda (opcional)</label>
+          <input type="text" id="foto-legenda" maxlength="120" placeholder="Ex.: Feira de ciências 2026" />
+
+          <div class="linha-form">
+            <button type="submit" class="btn-primary" id="btn-enviar-foto">Enviar foto</button>
+          </div>
+          <p class="erro" id="erro-foto"></p>
+        </form>
+      </section>
+
+      <section class="lista-projetos">
+        <h2>Fotos publicadas</h2>
+        <p class="sub">Clique no × para remover uma foto da galeria.</p>
+        <div class="grade-galeria" id="galeria-container">
+          <p class="vazio">Carregando fotos…</p>
+        </div>
+      </section>
+
+    </div>
 
   </main>
 
@@ -114,6 +153,23 @@
     const erroForm = document.getElementById("erro-form");
     const listaContainer = document.getElementById("lista-container");
 
+    const formFoto = document.getElementById("form-foto");
+    const fotoArquivo = document.getElementById("foto-arquivo");
+    const fotoLegenda = document.getElementById("foto-legenda");
+    const btnEnviarFoto = document.getElementById("btn-enviar-foto");
+    const erroFoto = document.getElementById("erro-foto");
+    const galeriaContainer = document.getElementById("galeria-container");
+
+    // ---------- Abas ----------
+    document.querySelectorAll(".aba-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".aba-btn").forEach((b) => b.classList.remove("ativa"));
+        document.querySelectorAll(".aba-painel").forEach((p) => (p.hidden = true));
+        btn.classList.add("ativa");
+        document.getElementById(btn.dataset.aba).hidden = false;
+      });
+    });
+
     // ---------- Autenticação ----------
     formLogin.addEventListener("submit", async (e) => {
       e.preventDefault();
@@ -138,6 +194,7 @@
         contaInfo.style.display = "flex";
         emailUsuario.textContent = usuario.email;
         escutarProjetos();
+        escutarGaleria();
       } else {
         loginView.style.display = "block";
         painelView.style.display = "none";
@@ -239,6 +296,102 @@
       const div = document.createElement("div");
       div.textContent = str ?? "";
       return div.innerHTML;
+    }
+
+    // ---------- Galeria: enviar foto ----------
+    // O Firestore aceita até ~1 MB por documento, então a foto é redimensionada
+    // e comprimida no navegador antes de ser salva.
+    const LIMITE_CARACTERES = 800000;
+
+    function carregarImagem(arquivo) {
+      return new Promise((resolve, reject) => {
+        const urlTemp = URL.createObjectURL(arquivo);
+        const img = new Image();
+        img.onload = () => { URL.revokeObjectURL(urlTemp); resolve(img); };
+        img.onerror = () => reject(new Error("imagem inválida"));
+        img.src = urlTemp;
+      });
+    }
+
+    async function comprimirImagem(arquivo) {
+      const img = await carregarImagem(arquivo);
+      let maxLado = 1400;
+      let qualidade = 0.85;
+
+      for (let tentativa = 0; tentativa < 10; tentativa++) {
+        const escala = Math.min(1, maxLado / Math.max(img.width, img.height));
+        const canvas = document.createElement("canvas");
+        canvas.width = Math.max(1, Math.round(img.width * escala));
+        canvas.height = Math.max(1, Math.round(img.height * escala));
+
+        const ctx = canvas.getContext("2d");
+        ctx.fillStyle = "#ffffff"; // fundo branco para PNGs com transparência
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+        const dataUrl = canvas.toDataURL("image/jpeg", qualidade);
+        if (dataUrl.length <= LIMITE_CARACTERES) return dataUrl;
+
+        qualidade = Math.max(0.4, qualidade - 0.08);
+        maxLado = Math.round(maxLado * 0.85);
+      }
+      throw new Error("não foi possível reduzir a imagem o suficiente");
+    }
+
+    formFoto.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      erroFoto.textContent = "";
+
+      const arquivo = fotoArquivo.files[0];
+      if (!arquivo) return;
+
+      btnEnviarFoto.disabled = true;
+      btnEnviarFoto.textContent = "Enviando…";
+
+      try {
+        const dataUrl = await comprimirImagem(arquivo);
+        await addDoc(collection(db, "galeria"), {
+          url: dataUrl,
+          legenda: fotoLegenda.value.trim() || null,
+          criadoEm: serverTimestamp(),
+        });
+        formFoto.reset();
+      } catch (err) {
+        erroFoto.textContent =
+          "Não foi possível enviar a foto. Use uma imagem JPG, PNG ou WebP e tente novamente.";
+      } finally {
+        btnEnviarFoto.disabled = false;
+        btnEnviarFoto.textContent = "Enviar foto";
+      }
+    });
+
+    async function apagarFoto(id) {
+      if (!confirm("Remover esta foto da galeria? Essa ação não pode ser desfeita.")) return;
+      await deleteDoc(doc(db, "galeria", id));
+    }
+
+    // ---------- Galeria: lista em tempo real ----------
+    function escutarGaleria() {
+      const q = query(collection(db, "galeria"), orderBy("criadoEm", "desc"));
+      onSnapshot(q, (snapshot) => {
+        if (snapshot.empty) {
+          galeriaContainer.innerHTML = '<p class="vazio">Nenhuma foto na galeria ainda.</p>';
+          return;
+        }
+
+        galeriaContainer.innerHTML = "";
+        snapshot.docs.forEach((d) => {
+          const foto = { id: d.id, ...d.data() };
+          const item = document.createElement("div");
+          item.className = "item-foto";
+          item.innerHTML = `
+          <img src="${escapeHtml(foto.url)}" alt="${escapeHtml(foto.legenda || "")}" />
+          <button type="button" class="apagar-foto" title="Remover foto">×</button>
+        `;
+          item.querySelector(".apagar-foto").addEventListener("click", () => apagarFoto(foto.id));
+          galeriaContainer.appendChild(item);
+        });
+      });
     }
   </script>
 
