@@ -21,6 +21,10 @@
   box-sizing: border-box;
 }
 
+html{
+  scroll-behavior: smooth;
+}
+
 img,
 svg {
   max-width: 100%;
@@ -328,6 +332,11 @@ body {
 .projetos {
   background-color: var(--principal);
   padding: 48px 24px;
+}
+
+.projetos .btn{
+  justify-items: center;
+  align-self: center;
 }
 
 .projetos-carrossel {

@@ -54,15 +54,15 @@
         </span>
       </a>
       <nav class="navigation">
-        <a class="active" href="">Inicio</a>
-        <a class="" href="">Projetos</a>
-        <a class="" href="">Galeria</a>
+        <a class="active" href="#hero">Inicio</a>
+        <a class="" href="pjt.html">Projetos</a>
+        <a class="" href="#galeria">Galeria</a>
       </nav>
     </div>
   </header>
 
   <main>
-    <section class="hero">
+    <section id="hero" class="hero">
       <div class="interno">
         <div class="hero-texto">
           <span>Feira Cientifica 2026</span>
@@ -71,9 +71,8 @@
             rios,
             da energia aos saberes de quem vive aqui.</p>
           <div class="interacao">
-            <a class="btn btn-primario" href="">Visitar Projetos</a>
             <a class="btn btn-mciencia" href="mciencia.html">Mais Ciência</a>
-            <a class="btn btn-secundario" href="">Ver Galeria</a>
+            <a class="btn btn-secundario" href="#galeria">Ver Galeria</a>
           </div>
         </div>
         <div class="hero-art">
@@ -186,7 +185,7 @@
         </button>
       </div>
     </section>
-
+    
     <section id="galeria" class="galeria">
       <div class="galeria-grid" id="galeria-grid">
         <p class="galeria-vazia">Carregando fotos…</p>
@@ -215,6 +214,7 @@
   <script type="module" src="js/carrega-projetos.js"></script>
   <script type="module" src="js/carrega-galeria.js"></script>
   <script src="js/carrossel-projetos.js"></script>
+  
 </body>
 
 </html>
